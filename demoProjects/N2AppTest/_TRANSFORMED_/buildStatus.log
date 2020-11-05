@@ -1,0 +1,69 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+:app:preBuild UP-TO-DATE
+:app:preDebugBuild
+:app:compileDebugAidl
+:app:compileDebugRenderscript
+:app:checkDebugManifest
+:app:generateDebugBuildConfig
+:app:prepareLintJar UP-TO-DATE
+:app:generateDebugResValues
+:app:generateDebugResources
+:app:mergeDebugResources
+:app:createDebugCompatibleScreenManifests
+:app:processDebugManifest
+:app:splitsDiscoveryTaskDebug
+:app:processDebugResources
+:app:generateDebugSources
+:app:javaPreCompileDebug
+:app:compileDebugJavaWithJavac
+:app:compileDebugNdk NO-SOURCE
+:app:compileDebugSources
+:app:mergeDebugShaders
+:app:compileDebugShaders
+:app:generateDebugAssets
+:app:mergeDebugAssets
+:app:transformClassesWithDexBuilderForDebug
+:app:transformDexArchiveWithExternalLibsDexMergerForDebug
+:app:transformDexArchiveWithDexMergerForDebug
+:app:mergeDebugJniLibFolders
+:app:transformNativeLibsWithMergeJniLibsForDebug
+:app:transformNativeLibsWithStripDebugSymbolForDebug
+:app:processDebugJavaRes NO-SOURCE
+:app:transformResourcesWithMergeJavaResForDebug
+:app:validateSigningDebug
+:app:packageDebug
+:app:assembleDebug
+:app:bundleAppClassesDebug
+:app:preDebugAndroidTestBuild
+:app:compileDebugAndroidTestAidl
+:app:processDebugAndroidTestManifest
+:app:compileDebugAndroidTestRenderscript
+:app:generateDebugAndroidTestBuildConfig
+:app:generateDebugAndroidTestResValues
+:app:generateDebugAndroidTestResources
+:app:mergeDebugAndroidTestResources
+:app:splitsDiscoveryTaskDebugAndroidTest
+:app:processDebugAndroidTestResources
+:app:generateDebugAndroidTestSources
+:app:javaPreCompileDebugAndroidTest
+:app:compileDebugAndroidTestJavaWithJavac
+:app:compileDebugAndroidTestNdk NO-SOURCE
+:app:compileDebugAndroidTestSources
+:app:mergeDebugAndroidTestShaders
+:app:compileDebugAndroidTestShaders
+:app:generateDebugAndroidTestAssets
+:app:mergeDebugAndroidTestAssets
+:app:transformClassesWithDexBuilderForDebugAndroidTest
+:app:transformDexArchiveWithExternalLibsDexMergerForDebugAndroidTest
+:app:transformDexArchiveWithDexMergerForDebugAndroidTest
+:app:mergeDebugAndroidTestJniLibFolders
+:app:transformNativeLibsWithMergeJniLibsForDebugAndroidTest
+:app:processDebugAndroidTestJavaRes NO-SOURCE
+:app:transformResourcesWithMergeJavaResForDebugAndroidTest
+:app:validateSigningDebugAndroidTest
+:app:packageDebugAndroidTest
+:app:assembleDebugAndroidTest
+:app:assembleAndroidTest
+
+BUILD SUCCESSFUL in 38s
+49 actionable tasks: 48 executed, 1 up-to-date
