@@ -1,0 +1,67 @@
+package com.ruirua.futexam.ui.activities
+
+import android.content.Intent
+import android.os.Bundle
+
+
+class ItemListActivity : AppCompatActivity() {
+    private var mTwoPane: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_item_list)
+        setSupportActionBar(toolbar)
+        toolbar.title = title
+        setupRecyclerView(item_list)
+    }
+
+    private fun setupRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, SampleData.getSampleCategories(), mTwoPane)
+    }
+
+    class SimpleItemRecyclerViewAdapter(private  val mParentActivity: ItemListActivity, private  val mValues: List<Category>, private  val mTwoPane: Boolean) : RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+        private val mOnClickListener: View.OnClickListener
+        init {
+            mOnClickListener = View.OnClickListener { v ->
+                val item = v.tag as Category
+                if (mTwoPane) {
+                    val fragment = ItemDetailFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(ItemDetailFragment.ARG_ITEM_ID, item.category_id.toString())
+                        }
+                    }
+                    mParentActivity.supportFragmentManager.beginTransaction().replace(R.id.item_detail_container, fragment).commit()
+                } else {
+                    val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
+                        putExtra(ItemDetailFragment.ARG_ITEM_ID, item.category_id)
+                    }
+                    v.context.startActivity(intent)
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_content, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val item = mValues[position]
+            holder.mIdView.text = item.category_id.toString()
+            with(holder.itemView) {
+                tag = item
+                setOnClickListener(mOnClickListener)
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return mValues.size
+        }
+
+        inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+            val mIdView: TextView = mView.cat_name_view
+
+            val mContentView: FloatingActionButton = mView.fab
+        }
+    }
+}
