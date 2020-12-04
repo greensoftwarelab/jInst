@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
-        },
+        }
         return super.onOptionsItemSelected(item);
     }
 
