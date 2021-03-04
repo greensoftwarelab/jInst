@@ -1,0 +1,12 @@
+>MainActivity_onCreate [m=example, cpu = 100, t = 1841652440537, savedInstanceState=null]
+<MainActivity_onCreate [m=example, cpu = 110, t = 1842246370537];
+>MainActivity_onCreateOptionsMenu [m=example, cpu = 120, t = 1842933382537, menu=android.support.v7.view.menu.MenuBuilder@c4a6e18]
+<MainActivity_onCreateOptionsMenu [m=example, cpu = 130, t = 1842934281537];
+>MainActivity_onNavigationItemSelected [m=example, cpu = 140, t = 1852198258537, item=Tools]
+>MainActivity_sum [m=example, cpu = 150, t = 1852198525537, x=10, y=10]
+<MainActivity_sum [m=example, cpu = 160, t = 1852199349537]
+<MainActivity_onNavigationItemSelected [m=example, cpu = 170, t = 1852199903537];
+>MainActivity_onNavigationItemSelected [m=example, cpu = 180, t = 1881132912537, item=Share]
+>MainActivity_sum [m=example, cpu = 190, t = 1881133222537, x=29, y=29]
+<MainActivity_sum [m=example, cpu = 200, t = 1881133513537]
+<MainActivity_onNavigationItemSelected [m=example, cpu = 210, t = 1881133978537]

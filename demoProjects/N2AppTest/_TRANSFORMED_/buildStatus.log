@@ -1,69 +1,14 @@
+Downloading https://services.gradle.org/distributions/gradle-4.1-all.zip
+.......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+Unzipping /Users/ruirua/.gradle/wrapper/dists/gradle-4.1-all/bzyivzo6n839fup2jbap0tjew/gradle-4.1-all.zip to /Users/ruirua/.gradle/wrapper/dists/gradle-4.1-all/bzyivzo6n839fup2jbap0tjew
+Set executable permissions for: /Users/ruirua/.gradle/wrapper/dists/gradle-4.1-all/bzyivzo6n839fup2jbap0tjew/gradle-4.1/bin/gradle
 Starting a Gradle Daemon (subsequent builds will be faster)
-:app:preBuild UP-TO-DATE
-:app:preDebugBuild
-:app:compileDebugAidl
-:app:compileDebugRenderscript
-:app:checkDebugManifest
-:app:generateDebugBuildConfig
-:app:prepareLintJar UP-TO-DATE
-:app:generateDebugResValues
-:app:generateDebugResources
-:app:mergeDebugResources
-:app:createDebugCompatibleScreenManifests
-:app:processDebugManifest
-:app:splitsDiscoveryTaskDebug
-:app:processDebugResources
-:app:generateDebugSources
-:app:javaPreCompileDebug
-:app:compileDebugJavaWithJavac
-:app:compileDebugNdk NO-SOURCE
-:app:compileDebugSources
-:app:mergeDebugShaders
-:app:compileDebugShaders
-:app:generateDebugAssets
-:app:mergeDebugAssets
-:app:transformClassesWithDexBuilderForDebug
-:app:transformDexArchiveWithExternalLibsDexMergerForDebug
-:app:transformDexArchiveWithDexMergerForDebug
-:app:mergeDebugJniLibFolders
-:app:transformNativeLibsWithMergeJniLibsForDebug
-:app:transformNativeLibsWithStripDebugSymbolForDebug
-:app:processDebugJavaRes NO-SOURCE
-:app:transformResourcesWithMergeJavaResForDebug
-:app:validateSigningDebug
-:app:packageDebug
-:app:assembleDebug
-:app:bundleAppClassesDebug
-:app:preDebugAndroidTestBuild
-:app:compileDebugAndroidTestAidl
-:app:processDebugAndroidTestManifest
-:app:compileDebugAndroidTestRenderscript
-:app:generateDebugAndroidTestBuildConfig
-:app:generateDebugAndroidTestResValues
-:app:generateDebugAndroidTestResources
-:app:mergeDebugAndroidTestResources
-:app:splitsDiscoveryTaskDebugAndroidTest
-:app:processDebugAndroidTestResources
-:app:generateDebugAndroidTestSources
-:app:javaPreCompileDebugAndroidTest
-:app:compileDebugAndroidTestJavaWithJavac
-:app:compileDebugAndroidTestNdk NO-SOURCE
-:app:compileDebugAndroidTestSources
-:app:mergeDebugAndroidTestShaders
-:app:compileDebugAndroidTestShaders
-:app:generateDebugAndroidTestAssets
-:app:mergeDebugAndroidTestAssets
-:app:transformClassesWithDexBuilderForDebugAndroidTest
-:app:transformDexArchiveWithExternalLibsDexMergerForDebugAndroidTest
-:app:transformDexArchiveWithDexMergerForDebugAndroidTest
-:app:mergeDebugAndroidTestJniLibFolders
-:app:transformNativeLibsWithMergeJniLibsForDebugAndroidTest
-:app:processDebugAndroidTestJavaRes NO-SOURCE
-:app:transformResourcesWithMergeJavaResForDebugAndroidTest
-:app:validateSigningDebugAndroidTest
-:app:packageDebugAndroidTest
-:app:assembleDebugAndroidTest
-:app:assembleAndroidTest
-
-BUILD SUCCESSFUL in 38s
-49 actionable tasks: 48 executed, 1 up-to-date
+Download https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/3.0.1/gradle-3.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-core/3.0.1/gradle-core-3.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/3.0.1/builder-3.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/databinding/compilerCommon/3.0.1/compilerCommon-3.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/3.0.1/gradle-api-3.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/26.0.1/lint-26.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/26.0.1/uast-26.0.1.pom
+Download https://dl.google.com/dl/android/maven2/com/android/tools/build/transform-api/2.0.0-deprecated-use-gradle-api/transform-api-2.0.0-deprecated-use-gradle-api.pom
+Download https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-stdlib/1.1.3-2/kotlin-stdlib-1.1.3-2.pom
