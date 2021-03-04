@@ -21,7 +21,7 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
 
     private static String markstartMethod = "updateState";
     private static String markstopMethod = "updateState";
-
+    public static String hunterLibrary = "com.hunter.library.debug";
 
 
 
@@ -40,6 +40,7 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
         stopProfiling = "stopProfiling";
         context = "null";
         markTest = "traceTest";
+        hunterLibrary = "com.hunter.library.debug";
 
     }
 
@@ -123,6 +124,10 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
     public List<ImportDeclaration> getImports() {
         ArrayList<ImportDeclaration> l =  new ArrayList<>();
         l.add(getLibrary());
+
+        ImportDeclaration importHunter = new ImportDeclaration(new NameExpr(hunterLibrary),false,true);
+        l.add(importHunter);
+
         return l;
     }
 

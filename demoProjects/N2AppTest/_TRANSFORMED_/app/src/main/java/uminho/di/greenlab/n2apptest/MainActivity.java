@@ -12,17 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import uminho.di.greenlab.trepnlibrary.TrepnLib;
+//import uminho.di.greenlab.trepnlibrary.TrepnLib;
+import com.hunter.library.debug.*;
 import android.content.Context;
-
-import com.hunter.library.debug.HunterDebug;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @HunterDebug
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onCreate|-1377881982");
+        //TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onCreate|-1377881982");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @HunterDebug
     @Override
     public void onBackPressed() {
-        TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onBackPressed|0");
+        // TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onBackPressed|0");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @HunterDebug
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onCreateOptionsMenu|3347807");
+        // TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onCreateOptionsMenu|3347807");
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @HunterDebug
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onOptionsItemSelected|-603141902");
+        // TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onOptionsItemSelected|-603141902");
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -74,21 +73,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    @HunterDebug
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    @HunterDebug
     public boolean onNavigationItemSelected(MenuItem item) {
-        TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onNavigationItemSelected|-603141902");
+        // TrepnLib.traceMethod("uminho.di.greenlab.n2apptest.MainActivity->onNavigationItemSelected|-603141902");
         int id = item.getItemId();
         if (id == R.id.nav_camera) {
+            sum(5,5);
         } else if (id == R.id.nav_gallery) {
+            sum(5,5);
         } else if (id == R.id.nav_slideshow) {
+            sum(5,5);
         } else if (id == R.id.nav_manage) {
+            sum(10,10);
         } else if (id == R.id.nav_share) {
+            sum(29,29);
         } else if (id == R.id.nav_send) {
+            sum(50,50);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @HunterDebug
+    public int sum(int x, int y){
+        return x+y;
     }
 }

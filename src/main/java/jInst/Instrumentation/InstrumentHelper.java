@@ -502,6 +502,7 @@ public class InstrumentHelper {
         String classDefinition = cDef.getClassDefinition();
 
         if (type == JInst.InstrumentationType.ACTIVITY) {
+            System.out.println("ACTIVITY");
             if (classDefinition.equals(launchActivity) ){
                 cDef.setLauncher(true);
                 cDef.setActivity(true);
@@ -551,21 +552,22 @@ public class InstrumentHelper {
                     for(ClassOrInterfaceType ci: x.getExtends()){
                         String name = ci.getName();
                         if(name.contains("Activity")){
-                            cDef.setActivity(true);
+                             cDef.setActivity(true);
                         }
                     }
                 }
                 if(type == JInst.InstrumentationType.TEST) {
+                    System.out.println("NOT ACTIVITY - TEST");
                     ClassOrInterfaceVisitor v = new ClassOrInterfaceVisitor();
-                    v.setCu(cu);
-                    v.setTracedMethod(true);
-                    v.visit(cu, cDef);
+                       v.setCu(cu);
+                       v.setTracedMethod(true);
+                       v.visit(cu, cDef);
                 }
 
                 MethodChangerVisitor v1= new MethodChangerVisitor();
-                v1.setCu(cu);
-                v1.setTracedMethod(type== JInst.InstrumentationType.TEST);
-                v1.visit(cu, cDef);
+                   v1.setCu(cu);
+                   v1.setTracedMethod(type== JInst.InstrumentationType.TEST);
+                   v1.visit(cu, cDef);
 
             }
             //this.getAcu().processJavaFile(file);
@@ -603,16 +605,20 @@ public class InstrumentHelper {
         //CHECK IF THE TEST CAN BE CONSIDERED FOR ENERGY MONITORING
         ClassOrInterfaceDeclaration x = (ClassOrInterfaceDeclaration)cu.getTypes().get(0);
         if(x.getExtends() != null){
+            System.out.println("TRANSFORM TEST 1");
             for(ClassOrInterfaceType ci: x.getExtends()){
                 String name = ci.getName();
                 String name2 = ci.getName().replaceAll("<.*?>", "");
                 if(testCase.contains(name)){
+                    System.out.println("TRANSFORM TEST 2");
                     cDef.setInstrumented(false);
                     isTestable = true;
                 }else if(instrumented.contains(name)){
+                    System.out.println("TRANSFORM TEST 3");
                     cDef.setInstrumented(true);
                     isTestable = true;
                 }else if(notTestable.equals(name)){
+                    System.out.println("TRANSFORM TEST 4");
                     isJunitTest = true;
                 }
 
@@ -628,6 +634,7 @@ public class InstrumentHelper {
 
 
             if(this.testType.get(file).equals("Junit4")){
+                System.out.println("TRANSFORM TEST 5");
                 isTestable = true;
                 cDef.setInstrumented(true);
                 cDef.setJunit4(true);
@@ -635,12 +642,14 @@ public class InstrumentHelper {
             }
 
             if (this.testType.get(file).equals("Other")){
+                System.out.println("TRANSFORM TEST 6");
                 cDef.setOther(true);
                 isTestable=true;
             }
 
 
             else if(this.testType.get(file).equals("SuiteJunit4")) {
+                System.out.println("TRANSFORM TEST 7");
                 isTestable = true;
                 cDef.setInstrumented(true);
                 cDef.setJunit4suite(true);
@@ -650,6 +659,7 @@ public class InstrumentHelper {
 //        if(isInstrumentedTestCase(file))
 //            cDef.setInstrumented(true);
         if(isTestable){
+            System.out.println("TRANSFORM TEST 8");
             TestChangerVisitor t = new TestChangerVisitor();
             t.traceMethod = this.type== JInst.InstrumentationType.TEST;
             t.visit(cu, ((Object)cDef) );
@@ -962,14 +972,16 @@ public class InstrumentHelper {
                     cu.getImports().add(imp3);
             }
         }else if(x.getExtends() != null){
+            System.out.println("METHOD VISITOR 1");
             if(isJunitTest){
+                System.out.println("METHOD VISITOR 2");
                 new MethodVisitor().visit(cu, cDef);
                 if(cDef.hasTests()){
                     return "";
                 } 
             }
         }
-         return cu.toString();
+        return cu.toString();
     }
 
 
@@ -1097,7 +1109,7 @@ public class InstrumentHelper {
     public static String wrapMethod(MethodDeclaration n, ClassDefs arg, String hash){
 
          List<String> ll = MethodIdentifierVisitorBackwards.getMethodDefinitionToks(n);
-         return  arg.getPack() +"."+ String.join(".", ll)  + "->" + n.getName()  + "|" + hash;
+         return arg.getPack() +"."+ String.join(".", ll)  + "->" + n.getName()  + "|" + hash;
 
     }
 
@@ -1128,6 +1140,7 @@ public class InstrumentHelper {
         }
         ParserFixed p = new ParserFixed();
         Node.File f = p.parseFile(FileUtils.stringFromFile(absolutePath),false);
+
         if (KtlTestsInstrumenterUtil.Companion.isTestFile(f) && this.isWhiteBox()){
             return KastreeWriterFixed.Companion.write( kt.instrumentTestFile(f), null);
         }
