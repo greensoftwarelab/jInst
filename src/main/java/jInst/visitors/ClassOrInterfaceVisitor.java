@@ -27,10 +27,12 @@ public class ClassOrInterfaceVisitor extends MethodChangerVisitor {
     public void visit(ClassOrInterfaceDeclaration n, Object arg){
 
         if(n.isInterface()){
+            System.out.println("VISIT CLASS OR INTERFACE 1");
             super.visit(n,arg);
             return;
         }
         else {
+            System.out.println("VISIT CLASS OR INTERFACE 2");
             //classe java
             ClassDefs cDef = (ClassDefs)arg;
             String appAndroidName = InstrumentHelper.getApplicationFullName();

@@ -14,6 +14,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
+import jInst.Instrumentation.InstrumentHunterDebug;
 import jInst.profiler.MethodOrientedProfiler;
 import jInst.profiler.Profiler;
 import jInst.profiler.TestOrientedProfiler;
@@ -215,7 +216,10 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
 
                 }
                 else {
+                     System.out.println("NORMAL TEST VISITOR");
                     //is normal test
+                    InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
+                    instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
                     String metodo = InstrumentHelper.wrapMethod(n,cDef,"");
                     MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null,metodo);
                     x.add(0, new ExpressionStmt(mce));
@@ -291,7 +295,10 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
                 }
 
                 else {
+                     System.out.println("NORMAL TEST VISITOR 2");
                     //normal test
+                    InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
+                    instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
                     String metodo = InstrumentHelper.wrapMethod(n,cDef,"");
                     MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null,metodo);
                     x.add(0, new ExpressionStmt(mce));

@@ -10,6 +10,8 @@ import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 
+import com.github.javaparser.ast.visitor.GenericVisitor;
+import com.github.javaparser.ast.visitor.VoidVisitor;
 import jInst.Instrumentation.Instrumenter;
 import jInst.Instrumentation.Utils.ProjectMethods;
 import jInst.profiler.MethodOrientedProfiler;
@@ -19,11 +21,14 @@ import jInst.Instrumentation.InstrumentHelper;
 import jInst.visitors.utils.ReturnFlag;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import jInst.Instrumentation.InstrumentHunterDebug;
 import java.util.ArrayList;
 import java.util.List;
 import jInst.visitors.utils.ClassDefs;
 import jInst.util.ClassM;
 import jInst.util.PackageM;
+import javafx.scene.Parent;
+import nu.xom.ParentNode;
 import org.json.simple.JSONObject;
 
 import java.util.LinkedList;
@@ -333,6 +338,11 @@ public class MethodChangerVisitor extends VoidVisitorAdapter {
 
     @Override
     public void visit(MethodDeclaration n, Object arg) {
+
+        InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
+        instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
+
+        System.out.println("VISIT METHOD CHANGER");
         ClassDefs cDef = (ClassDefs)arg;
         String retType = n.getType().getClass().getName();
 
@@ -344,14 +354,16 @@ public class MethodChangerVisitor extends VoidVisitorAdapter {
             if(n.getBody().getStmts() != null){
                 List<Statement> x = n.getBody().getStmts();
                 if (tracedMethod){
+                    System.out.println("VISIT METHOD CHANGER 2");
                     Instrumenter p =InstrumentHelper.getInstrumenter();
                     MethodCallExpr getContext = new MethodCallExpr();
                     getContext.setName(InstrumentHelper.getApplicationFullName() + ".getAppContext");
                     MethodCallExpr mcB = ((TestOrientedProfiler) p).markMethod(getContext,metodo);
                     int insertIn = 0;
-                    x.add(insertIn, new ExpressionStmt(mcB));
+                     x.add(insertIn, new ExpressionStmt(mcB));
                 }
                 else {
+                    System.out.println("VISIT METHOD CHANGER 3");
                     //Avoid monitoring getters and setters and simple methods
                     int operations = MethodChangerVisitor.countOperations(n);
                     if(operations>=NUMBER_OF_OPERATIONS){
