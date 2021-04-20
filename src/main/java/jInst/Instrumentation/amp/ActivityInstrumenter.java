@@ -1,8 +1,6 @@
-package jInst.amp;
+package jInst.Instrumentation.amp;
 
-import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.MethodCallExpr;
 import jInst.Instrumentation.Instrumenter;
 
 

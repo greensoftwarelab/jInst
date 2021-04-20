@@ -1,14 +1,8 @@
-package jInst.amp
+package jInst.Instrumentation.amp
 
-import com.github.javaparser.ast.ImportDeclaration
-import com.github.javaparser.ast.expr.Expression
-import com.github.javaparser.ast.expr.MethodCallExpr
 import jInst.util.convertImportDeclaration
 import jInst.util.convertMethodCall
 import kastree.ast.Node
-import kastree.ast.Writer
-import kastree.ast.psi.Parser
-import java.io.File
 
 class AMPInstrumenterAdapter ( val actInstr : ActivityInstrumenter )  {
 

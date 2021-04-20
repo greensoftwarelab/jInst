@@ -10,25 +10,20 @@ import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 
-import com.github.javaparser.ast.visitor.GenericVisitor;
-import com.github.javaparser.ast.visitor.VoidVisitor;
 import jInst.Instrumentation.Instrumenter;
 import jInst.Instrumentation.Utils.ProjectMethods;
-import jInst.profiler.MethodOrientedProfiler;
-import jInst.profiler.Profiler;
-import jInst.profiler.TestOrientedProfiler;
+import jInst.Instrumentation.hunter.AnnotationInstrumenter;
+import jInst.Instrumentation.profiler.MethodOrientedProfiler;
+import jInst.Instrumentation.profiler.TestOrientedProfiler;
 import jInst.Instrumentation.InstrumentHelper;
 import jInst.visitors.utils.ReturnFlag;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-
-import jInst.Instrumentation.InstrumentHunterDebug;
 import java.util.ArrayList;
 import java.util.List;
 import jInst.visitors.utils.ClassDefs;
 import jInst.util.ClassM;
 import jInst.util.PackageM;
-import javafx.scene.Parent;
-import nu.xom.ParentNode;
+
 import org.json.simple.JSONObject;
 
 import java.util.LinkedList;
@@ -338,23 +333,25 @@ public class MethodChangerVisitor extends VoidVisitorAdapter {
 
     @Override
     public void visit(MethodDeclaration n, Object arg) {
-
-        InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
-        instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
-
-        System.out.println("VISIT METHOD CHANGER");
+        // InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
+        //instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
         ClassDefs cDef = (ClassDefs)arg;
         String retType = n.getType().getClass().getName();
-
         String metodo = InstrumentHelper.wrapMethod(n,cDef, ProjectMethods.Companion.hashArgs(ProjectMethods.Companion.wrapJavaArgs(n.getParameters())));
-
         registMethod(metodo,n);
 
+        if(InstrumentHelper.getInstrumenter() instanceof AnnotationInstrumenter){
+            AnnotationInstrumenter ai = (AnnotationInstrumenter) InstrumentHelper.getInstrumenter();
+            List<AnnotationExpr> newAnnotations = new ArrayList<>();
+            newAnnotations.addAll(n.getAnnotations());
+            newAnnotations.addAll(ai.getAnnotations());
+            n.setAnnotations(newAnnotations);
+            return;
+        }
         if(n.getBody() != null){
             if(n.getBody().getStmts() != null){
                 List<Statement> x = n.getBody().getStmts();
                 if (tracedMethod){
-                    System.out.println("VISIT METHOD CHANGER 2");
                     Instrumenter p =InstrumentHelper.getInstrumenter();
                     MethodCallExpr getContext = new MethodCallExpr();
                     getContext.setName(InstrumentHelper.getApplicationFullName() + ".getAppContext");
@@ -363,7 +360,7 @@ public class MethodChangerVisitor extends VoidVisitorAdapter {
                      x.add(insertIn, new ExpressionStmt(mcB));
                 }
                 else {
-                    System.out.println("VISIT METHOD CHANGER 3");
+
                     //Avoid monitoring getters and setters and simple methods
                     int operations = MethodChangerVisitor.countOperations(n);
                     if(operations>=NUMBER_OF_OPERATIONS){
@@ -403,6 +400,15 @@ public class MethodChangerVisitor extends VoidVisitorAdapter {
         ClassDefs cDef = (ClassDefs)arg;
         String metodo = InstrumentHelper.wrapMethod(n,cDef, ProjectMethods.Companion.hashArgs(ProjectMethods.Companion.wrapJavaArgs(n.getParameters())));
         registMethod(metodo, n);
+
+        if(InstrumentHelper.getInstrumenter() instanceof AnnotationInstrumenter){
+            AnnotationInstrumenter ai = (AnnotationInstrumenter) InstrumentHelper.getInstrumenter();
+            List<AnnotationExpr> newAnnotations = new ArrayList<>();
+            newAnnotations.addAll(n.getAnnotations());
+            newAnnotations.addAll(ai.getAnnotations());
+            n.setAnnotations(newAnnotations);
+            return;
+        }
 
         if(n.getBlock() != null){
             if(n.getBlock().getStmts() != null){

@@ -54,6 +54,7 @@ public class InstrumentGradleHelper extends InstrumentHelper{
             if(f.isDirectory()){
                 if(!f.getName().equals(tName)){
                     //PASS THE FILES THROUGH THE PARSING AND INSTRUMENTATION TOOL
+                    //PASS THE FILES THROUGH THE PARSING AND INSTRUMENTATION TOOL
                     this.instrumentSource(f, new File(transFolder+f.getName()));
                 }
             }else if(f.isFile()){
@@ -85,7 +86,6 @@ public class InstrumentGradleHelper extends InstrumentHelper{
     @Override
     public void addPermission(){
         File ax = new File(manifest);
-        System.out.println("[JInst] Main Manifest :" +manifest);
         if(!manifest.equals("") && ax.exists()){
             XMLParser.editManifest(manifest);
             //XMLParser.insertReadWriteExternalPermissions(manifest);

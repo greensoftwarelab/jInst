@@ -11,16 +11,18 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import jInst.Instrumentation.InstrumentHunterDebug;
-import jInst.profiler.MethodOrientedProfiler;
-import jInst.profiler.Profiler;
-import jInst.profiler.TestOrientedProfiler;
+import jInst.Instrumentation.hunter.AnnotationInstrumenter;
+import jInst.Instrumentation.profiler.MethodOrientedProfiler;
+import jInst.Instrumentation.profiler.Profiler;
+import jInst.Instrumentation.profiler.TestOrientedProfiler;
 import jInst.Instrumentation.InstrumentHelper;
 
-import jInst.profiler.trepn.TrepnLibrary;
+import jInst.Instrumentation.profiler.trepn.TrepnLibrary;
 import jInst.visitors.utils.ClassDefs;
 
 /**
@@ -216,10 +218,18 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
 
                 }
                 else {
-                     System.out.println("NORMAL TEST VISITOR");
+
                     //is normal test
-                    InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
-                    instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
+                    //InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
+                    //instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
+                    if(InstrumentHelper.getInstrumenter() instanceof AnnotationInstrumenter){
+                        AnnotationInstrumenter ai = (AnnotationInstrumenter) InstrumentHelper.getInstrumenter();
+                        List<AnnotationExpr> newAnnotations = new ArrayList<>();
+                        newAnnotations.addAll(n.getAnnotations());
+                        newAnnotations.addAll(ai.getAnnotations());
+                        n.setAnnotations(newAnnotations);
+                        return;
+                    }
                     String metodo = InstrumentHelper.wrapMethod(n,cDef,"");
                     MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null,metodo);
                     x.add(0, new ExpressionStmt(mce));
@@ -295,10 +305,15 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
                 }
 
                 else {
-                     System.out.println("NORMAL TEST VISITOR 2");
+
                     //normal test
-                    InstrumentHunterDebug instrumentHunterDebug = new InstrumentHunterDebug();
-                    instrumentHunterDebug.insertMarkerAnnotation(n,"HunterDebug");
+                    if(InstrumentHelper.getInstrumenter() instanceof AnnotationInstrumenter){
+                        AnnotationInstrumenter ai = (AnnotationInstrumenter) InstrumentHelper.getInstrumenter();
+                        List<AnnotationExpr> newAnnotations = new ArrayList<>();
+                        newAnnotations.addAll(n.getAnnotations());
+                        newAnnotations.addAll(ai.getAnnotations());
+                        n.setAnnotations(newAnnotations);
+                    }
                     String metodo = InstrumentHelper.wrapMethod(n,cDef,"");
                     MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null,metodo);
                     x.add(0, new ExpressionStmt(mce));

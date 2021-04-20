@@ -24,7 +24,7 @@ public class JInst {
 
      public enum InstrumentationType {
          ACTIVITY,
-        // LAUNCHER_ACTIVITY, // for amp instrumenting
+         ANNOTATION,
          TEST, // for test oriented, when test  case instrumentation is needed
          UNITTEST,
          EGIN_METHOD,
@@ -68,6 +68,10 @@ public class JInst {
          else if (test_target.equals("activityoriented")){
              return InstrumentationType.ACTIVITY;
          }
+         else if (test_target.equals("annotationoriented")){
+             return InstrumentationType.ANNOTATION;
+         }
+
          else return InstrumentationType.NONE;
     }
 

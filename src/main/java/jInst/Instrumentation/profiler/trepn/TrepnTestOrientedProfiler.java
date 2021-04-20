@@ -1,15 +1,9 @@
-package jInst.profiler.trepn;
+package jInst.Instrumentation.profiler.trepn;
 
 import com.github.javaparser.ASTHelper;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.visitor.GenericVisitor;
-import com.github.javaparser.ast.visitor.VoidVisitor;
-import jInst.profiler.TestOrientedProfiler;
-import jdk.nashorn.internal.ir.BlockStatement;
+import jInst.Instrumentation.profiler.TestOrientedProfiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +15,7 @@ public class TrepnTestOrientedProfiler extends TrepnLibrary implements TestOrien
 
     public static String markMethod = "traceMethod";
     public static String markTest = "traceTest";
-    public static String hunterLibrary = "com.hunter.library.debug";
+    //public static String hunterLibrary = "com.hunter.library.debug";
 
     public TrepnTestOrientedProfiler(){
         //fulllibrary = "com.greenlab.trepnlib.TrepnLib";
@@ -30,7 +24,7 @@ public class TrepnTestOrientedProfiler extends TrepnLibrary implements TestOrien
         stopProfiling = "stopProfilingTest";
         markMethod = "traceMethod";
         markTest = "traceTest";
-        hunterLibrary = "com.hunter.library.debug";
+        //hunterLibrary = "com.hunter.library.debug";
     }
 
 
@@ -110,9 +104,8 @@ public class TrepnTestOrientedProfiler extends TrepnLibrary implements TestOrien
     public List<ImportDeclaration> getImports() {
        ArrayList<ImportDeclaration> l =  new ArrayList<>();
        l.add(getLibrary());
-
-       ImportDeclaration importHunter = new ImportDeclaration(new NameExpr(hunterLibrary),false,true);
-       l.add(importHunter);
+      // ImportDeclaration importHunter = new ImportDeclaration(new NameExpr(hunterLibrary),false,true);
+        // l.add(importHunter);
        return l;
     }
 }

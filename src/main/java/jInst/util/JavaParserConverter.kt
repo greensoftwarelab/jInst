@@ -39,6 +39,15 @@ fun convertImportDeclaration(dec : ImportDeclaration): Node.Import {
     return Node.Import(  dec.name.name.split("."),false, null )
 }
 
+fun convertAnnotation(ann: AnnotationExpr): Node.Modifier.AnnotationSet.Annotation  {
+    return when(ann) {
+        is MarkerAnnotationExpr -> {
+            Node.Modifier.AnnotationSet.Annotation(names = listOf(ann.name.name), typeArgs = listOf(), args = listOf())
+        }
+        else -> Node.Modifier.AnnotationSet.Annotation(names = listOf("JInstInstrumentationError"), typeArgs = listOf(), args = listOf())
+    }
+}
+
 fun operatorConverter(operator: BinaryExpr.Operator?): Node.Expr.BinaryOp.Oper?? {
     return when ( operator){
         is BinaryExpr.Operator -> {

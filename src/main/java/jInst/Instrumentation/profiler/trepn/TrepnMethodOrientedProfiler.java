@@ -1,12 +1,9 @@
-package jInst.profiler.trepn;
+package jInst.Instrumentation.profiler.trepn;
 
 import com.github.javaparser.ASTHelper;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import jInst.profiler.MethodOrientedProfiler;
-import jInst.visitors.utils.ClassDefs;
+import jInst.Instrumentation.profiler.MethodOrientedProfiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,7 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
 
     private static String markstartMethod = "updateState";
     private static String markstopMethod = "updateState";
-    public static String hunterLibrary = "com.hunter.library.debug";
+    //public static String hunterLibrary = "com.hunter.library.debug";
 
 
 
@@ -40,7 +37,7 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
         stopProfiling = "stopProfiling";
         context = "null";
         markTest = "traceTest";
-        hunterLibrary = "com.hunter.library.debug";
+        //hunterLibrary = "com.hunter.library.debug";
 
     }
 
@@ -125,8 +122,8 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
         ArrayList<ImportDeclaration> l =  new ArrayList<>();
         l.add(getLibrary());
 
-        ImportDeclaration importHunter = new ImportDeclaration(new NameExpr(hunterLibrary),false,true);
-        l.add(importHunter);
+        //ImportDeclaration importHunter = new ImportDeclaration(new NameExpr(hunterLibrary),false,true);
+        //l.add(importHunter);
 
         return l;
     }

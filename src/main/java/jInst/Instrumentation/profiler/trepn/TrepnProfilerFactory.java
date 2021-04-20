@@ -1,8 +1,8 @@
-package jInst.profiler.trepn;
+package jInst.Instrumentation.profiler.trepn;
 
-import jInst.profiler.MethodOrientedProfiler;
-import jInst.profiler.ProfilerAbstractFactory;
-import jInst.profiler.TestOrientedProfiler;
+import jInst.Instrumentation.profiler.MethodOrientedProfiler;
+import jInst.Instrumentation.profiler.ProfilerAbstractFactory;
+import jInst.Instrumentation.profiler.TestOrientedProfiler;
 
 /**
  * Created by rrua on 17/06/17.

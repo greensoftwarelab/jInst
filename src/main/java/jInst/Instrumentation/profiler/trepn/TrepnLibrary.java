@@ -1,4 +1,4 @@
-package jInst.profiler.trepn;
+package jInst.Instrumentation.profiler.trepn;
 
 import com.github.javaparser.ast.expr.*;
 

@@ -1,12 +1,10 @@
-package jInst.profiler.trepn
+package jInst.Instrumentation.profiler.trepn
 
-import com.github.javaparser.ast.ImportDeclaration
 import com.github.javaparser.ast.expr.Expression
 
 import jInst.util.convertMethodCall
 
 import kastree.ast.Node
-import java.util.ArrayList
 
 
 class TrepnMethodOrientedProfilerAdapter ( val tp : TrepnMethodOrientedProfiler ) {

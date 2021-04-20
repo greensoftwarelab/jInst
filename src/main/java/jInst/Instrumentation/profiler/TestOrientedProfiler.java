@@ -1,6 +1,5 @@
-package jInst.profiler;
+package jInst.Instrumentation.profiler;
 
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 

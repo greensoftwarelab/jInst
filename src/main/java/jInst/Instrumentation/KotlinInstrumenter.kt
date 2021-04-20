@@ -4,16 +4,17 @@ package jInst.Instrumentation
 import com.github.javaparser.ast.expr.Expression
 import jInst.Instrumentation.Utils.*
 import jInst.JInst
-import jInst.amp.AMPInstrumenter
-import jInst.amp.AMPInstrumenterAdapter
-import jInst.amp.ActivityInstrumenter
-import jInst.profiler.trepn.*
+import jInst.Instrumentation.amp.AMPInstrumenter
+import jInst.Instrumentation.amp.AMPInstrumenterAdapter
+import jInst.Instrumentation.amp.ActivityInstrumenter
+import jInst.Instrumentation.hunter.HunterAnnotationInstrumenter
+import jInst.Instrumentation.hunter.HunterAnnotationInstrumenterAdapter
+import jInst.Instrumentation.profiler.trepn.*
 import jInst.util.KastreeWriterFixed
 import jInst.visitors.MMutableVisitor.MMutableVisitor
 import kastree.ast.Node
 import kastree.ast.Visitor
 import kastree.ast.Writer
-import kastree.ast.psi.Parser
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import java.io.File
@@ -32,12 +33,16 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
     init {
         if (instrumentationType == JInst.InstrumentationType.METHOD){
             instrumenter = TrepnProfilerFactory().createMethodOrientedProfiler()
+
         }
         else if (instrumentationType == JInst.InstrumentationType.TEST){    // else if ( instrumentationType == JInst.InstrumentationType.TEST) {
             instrumenter =  TrepnProfilerFactory().createTestOrientedProfiler()
         }
         else if (instrumentationType == JInst.InstrumentationType.ACTIVITY){    // else if ( instrumentationType == JInst.InstrumentationType.TEST) {
             instrumenter =   AMPInstrumenter()
+        }
+        else if (instrumentationType == JInst.InstrumentationType.ANNOTATION){    // else if ( instrumentationType == JInst.InstrumentationType.TEST) {
+            instrumenter =   HunterAnnotationInstrumenter()
         }
     }
 
@@ -70,6 +75,9 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
             }
             instrumentationType == JInst.InstrumentationType.ACTIVITY  -> {
                 instrumentLaunchActivity(node)
+            }
+            instrumentationType == JInst.InstrumentationType.ANNOTATION  -> {
+                instrumentFileAnnotationOriented(node)
             }
             else -> {
                 throw UnsupportedOperationException("Unsupported Instrumentation Type")
@@ -494,13 +502,11 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
     }
 
     fun instrumentBegin(node: Node, scope : String, map : MutableSet<Int> ): Node {
-        println("INSTRUMENT BEGIN KOTLIN")
         var scope1 : String =  scope
         val allmet = allMethods
         return MMutableVisitor.preVisit(node) { v, p ->
             when  {
                 v is Node.Expr.BinaryOp  && KastreeWriterFixed.write(v.oper).equals(".")  && v.rhs is Node.Expr.Call && ! map.contains(v.hashCode())->{
-                    println("INSTRUMENT BEGIN KOTLIN 1")
                     //scope1 += extractString(v.lhs)
                     map.add(v.rhs.hashCode())
                     //val insExpr = getAppropriateMethodCall(scope1, true)
@@ -510,7 +516,6 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     x
                 }
                 v is Node.Decl.Structured && v.form.name in interest  && ( ! map.contains(v.hashCode()) ) -> {
-                    println("INSTRUMENT BEGIN KOTLIN 2")
                     scope1+=  "."+v.name
                     //val insExpr = getAppropriateMethodCall(scope1, true)
                     val l: List<Node.Decl> = v.members.map { x -> instrumentBegin( x, scope1, map) }.filter { it -> it is Node.Decl  }.map { it -> it as Node.Decl }
@@ -520,34 +525,24 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     x
                 }
                 v is Node.Decl.Func  && ( ! map.contains(v.hashCode()) ) -> {
-                    println("INSTRUMENT BEGIN KOTLIN 3")
                     val args = ProjectMethods.wrapArgs(v.params)
-                    //val scopada = scope1+ "->"+ v.name
                     scope1 += "->"+ v.name + "|"+ ProjectMethods.hashArgs(args)
                     map.add(v.hashCode())
                     val x = instrumentBegin(v, scope1,map) as Node.Decl.Func
                     val jo = JSONObject()
                     jo.put("args", JSONArray())
-
                     allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods), args,scope1, "kotlin" ) )
                     if (x.body is Node.Decl.Func.Body.Block){
-                        println("INSTRUMENT BEGIN KOTLIN 3.1")
                         val z = (x.body as Node.Decl.Func.Body.Block).block.stmts
                         val insExpr = getAppropriateMethodCall(scope1, true)
                         if( z.isEmpty() ){
-                            println("INSTRUMENT BEGIN KOTLIN 3.2")
                             //println(Writer.write(v))
                             scope1 = scope
                             v
                         }
                         else if( ! KastreeWriterFixed.write(z.first()).equals(KastreeWriterFixed.write(insExpr))){
-                            println("INSTRUMENT BEGIN KOTLIN 3.3")
-                            // val newRealInsExpr = addArg( insExpr, Node.Expr.Name ( scope1 ) )
-                            // TODO concat with previous annotations
-                            val annotation = Node.Modifier.AnnotationSet.Annotation(names = listOf("HunterDebug"), typeArgs = listOf(), args = listOf())
-                            val annSet = Node.Modifier.AnnotationSet(target = null, anns = listOf(annotation))
 
-                            val xx = x.copy(listOf(annSet),x.typeParams,x.receiverType,x.name,x.paramTypeParams,x.params,x.type,x.typeConstraints, Node.Decl.Func.Body.Block( Node.Block( insertInBegin(z, Node.Stmt.Expr(insExpr), "Trepn")) ))
+                            val xx = x.copy(x.anns,x.typeParams,x.receiverType,x.name,x.paramTypeParams,x.params,x.type,x.typeConstraints, Node.Decl.Func.Body.Block( Node.Block( insertInBegin(z, Node.Stmt.Expr(insExpr), "Trepn")) ))
                             map.add(xx.hashCode())
                             scope1 = scope
                             xx
@@ -668,7 +663,6 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                             }
                         }
                         v.copy(finalist)
-                        //v.copy ( x2 )
                     }
                     else -> v
                 }
@@ -917,6 +911,12 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
             return z as Node.File
         }
 
+    fun instrumentFileAnnotationOriented(node: Node.File): Node.File {
+        val pack = if( node.pkg!=null) wrapPackage(node.pkg!!) else ""
+        return instrumentAnnotation(addInstrumenterImport( node),  pack, mutableSetOf()) as Node.File
+    }
+
+
     fun wrapPackage(node : Node.Package): String{
         return node.names.foldRight(""){ y, x-> y + "." +x}.reversed().replaceFirst(".","").reversed()
     }
@@ -933,6 +933,69 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
         }
         return ""
     }
+
+    fun instrumentAnnotation(node: Node, scope : String, map : MutableSet<Int> ): Node {
+        var scope1 : String =  scope
+        return MMutableVisitor.preVisit(node) { v, p ->
+            when  {
+                v is Node.Expr.BinaryOp  && KastreeWriterFixed.write(v.oper).equals(".")  && v.rhs is Node.Expr.Call && ! map.contains(v.hashCode())->{
+                    //scope1 += extractString(v.lhs)
+                    map.add(v.rhs.hashCode())
+                    //val insExpr = getAppropriateMethodCall(scope1, true)
+                    val x = v.copy(v.lhs, v.oper, instrumentBegin(v.rhs,scope1, map ) as Node.Expr)
+                    map.add(v.rhs.hashCode())
+                    scope1 = scope
+                    x
+                }
+                v is Node.Decl.Structured && v.form.name in interest  && ( ! map.contains(v.hashCode()) ) -> {
+                    scope1+=  "."+v.name
+                    //val insExpr = getAppropriateMethodCall(scope1, true)
+                    val l: List<Node.Decl> = v.members.map { x -> instrumentAnnotation( x, scope1, map) }.filter { it is Node.Decl  }.map { it as Node.Decl }
+                    scope1 = scope
+                    val x = v.copy(v.mods,v.form,v.name,v.typeParams,v.primaryConstructor,v.parentAnns,v.parents,v.typeConstraints, l)
+                    map.add(x.hashCode())
+                    x
+                }
+                v is Node.Decl.Func  && ( ! map.contains(v.hashCode()) ) -> {
+                    val args = ProjectMethods.wrapArgs(v.params)
+                    //val scopada = scope1+ "->"+ v.name
+                    scope1 += "->"+ v.name + "|"+ ProjectMethods.hashArgs(args)
+                    val jo = JSONObject()
+                    jo.put("args", JSONArray())
+                    allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods), args,scope1, "kotlin" ) )
+                    val anns = mutableListOf<Node.Modifier>( HunterAnnotationInstrumenterAdapter(getInstrumenter() as HunterAnnotationInstrumenter).getAnnotations())
+                    anns.addAll(v.mods)
+                    val t = v.copy(anns,v.typeParams,v.receiverType,v.name,v.paramTypeParams,v.params,v.type,v.typeConstraints,v.body)
+                    map.add(t.hashCode())
+                    scope1 = scope
+                    t
+                }
+                v is Node.Decl.Constructor  && ( ! map.contains(v.hashCode()) ) -> {
+                    println("INSTRUMENT BEGIN KOTLIN 4")
+                    val args = ProjectMethods.wrapArgs(v.params)
+                    scope1 += "-><init>"+ "|" + ProjectMethods.hashArgs(args)
+                    allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods),args,scope1 , "kotlin" ) )
+                    val anns = mutableListOf<Node.Modifier>( HunterAnnotationInstrumenterAdapter(getInstrumenter() as HunterAnnotationInstrumenter).getAnnotations())
+                    anns.addAll(v.mods)
+                    val t = v.copy(anns,v.params,v.delegationCall,v.block)
+                    map.add(t.hashCode())
+                    scope1 = scope
+                    t
+                }
+                v  is Node.Decl.Init  && ( ! map.contains(v.hashCode()) ) -> {
+                    scope1+="-><init>"
+                    allMethods.addMethod( ProjectMethods.buildJSONObj(listOf(),ProjectMethods.wrapArgs(listOf()),scope1 , "kotlin" ) )
+                    //val insExpr = getAppropriateMethodCall(scope1, true)
+                    // val newRealInsExpr = addArg(insExpr, Node.Expr.Name ( scope1 ) )
+                    //val x =  v.copy(Node.Block( insertInBegin(v.block.stmts, Node.Stmt.Expr(insExpr), "Trepn")))
+                    map.add(v.hashCode())
+                    v
+                }
+                else -> v
+            }
+        }
+    }
+
 }
 
 

@@ -26,19 +26,18 @@ import java.util.*;
 
 import jInst.Instrumentation.Utils.KtlTestsInstrumenterUtil;
 import jInst.Instrumentation.Utils.ProjectMethods;
+import jInst.Instrumentation.hunter.HunterAnnotationInstrumenter;
 import jInst.JInst;
 import jInst.ResourceLoader;
-import jInst.amp.AMPInstrumenter;
-import jInst.profiler.Profiler;
-import jInst.profiler.ProfilerAbstractFactory;
-import jInst.profiler.trepn.TrepnLibrary;
-import jInst.profiler.trepn.TrepnProfilerFactory;
+import jInst.Instrumentation.amp.AMPInstrumenter;
+import jInst.Instrumentation.profiler.Profiler;
+import jInst.Instrumentation.profiler.ProfilerAbstractFactory;
+import jInst.Instrumentation.profiler.trepn.TrepnLibrary;
+import jInst.Instrumentation.profiler.trepn.TrepnProfilerFactory;
 import jInst.util.*;
 import jInst.visitors.*;
 import jInst.visitors.utils.ClassDefs;
-import jInst.visitors.utils.PairStringNode;
 import kastree.ast.Node;
-import kastree.ast.psi.Parser;
 
 /**
  *
@@ -172,6 +171,9 @@ public class InstrumentHelper {
             instrumenter = new  AMPInstrumenter();
             this.findLauncher();
             this.launchActivity  = XMLParser.getLauncher();
+        }
+        else if(type== JInst.InstrumentationType.ANNOTATION){
+            instrumenter = new HunterAnnotationInstrumenter();
         }
     }
 
@@ -566,7 +568,7 @@ public class InstrumentHelper {
 
                 MethodChangerVisitor v1= new MethodChangerVisitor();
                    v1.setCu(cu);
-                   v1.setTracedMethod(type== JInst.InstrumentationType.TEST);
+                   v1.setTracedMethod(type != JInst.InstrumentationType.METHOD );
                    v1.visit(cu, cDef);
 
             }
@@ -605,20 +607,16 @@ public class InstrumentHelper {
         //CHECK IF THE TEST CAN BE CONSIDERED FOR ENERGY MONITORING
         ClassOrInterfaceDeclaration x = (ClassOrInterfaceDeclaration)cu.getTypes().get(0);
         if(x.getExtends() != null){
-            System.out.println("TRANSFORM TEST 1");
             for(ClassOrInterfaceType ci: x.getExtends()){
                 String name = ci.getName();
                 String name2 = ci.getName().replaceAll("<.*?>", "");
                 if(testCase.contains(name)){
-                    System.out.println("TRANSFORM TEST 2");
                     cDef.setInstrumented(false);
                     isTestable = true;
                 }else if(instrumented.contains(name)){
-                    System.out.println("TRANSFORM TEST 3");
                     cDef.setInstrumented(true);
                     isTestable = true;
                 }else if(notTestable.equals(name)){
-                    System.out.println("TRANSFORM TEST 4");
                     isJunitTest = true;
                 }
 
@@ -634,7 +632,7 @@ public class InstrumentHelper {
 
 
             if(this.testType.get(file).equals("Junit4")){
-                System.out.println("TRANSFORM TEST 5");
+
                 isTestable = true;
                 cDef.setInstrumented(true);
                 cDef.setJunit4(true);
@@ -642,14 +640,14 @@ public class InstrumentHelper {
             }
 
             if (this.testType.get(file).equals("Other")){
-                System.out.println("TRANSFORM TEST 6");
+
                 cDef.setOther(true);
                 isTestable=true;
             }
 
 
             else if(this.testType.get(file).equals("SuiteJunit4")) {
-                System.out.println("TRANSFORM TEST 7");
+
                 isTestable = true;
                 cDef.setInstrumented(true);
                 cDef.setJunit4suite(true);
@@ -659,10 +657,14 @@ public class InstrumentHelper {
 //        if(isInstrumentedTestCase(file))
 //            cDef.setInstrumented(true);
         if(isTestable){
-            System.out.println("TRANSFORM TEST 8");
+
             TestChangerVisitor t = new TestChangerVisitor();
             t.traceMethod = this.type== JInst.InstrumentationType.TEST;
             t.visit(cu, ((Object)cDef) );
+
+            if( (instrumenter instanceof HunterAnnotationInstrumenter ) ){
+                return cu.toString();
+            }
 
             if(cDef.isJunit4suite()){
                 if (!cDef.isBeforeClass()) {
@@ -788,10 +790,10 @@ public class InstrumentHelper {
                         }
 
 //                        ASTHelper.addArgument(mcS, getContext);
+
                         MethodCallExpr mcS = ((Profiler) instrumenter).startProfiler(getContext);
                         ArrayList<Statement> body = new ArrayList<Statement>();
                         body.add(new ExpressionStmt(mcS));
-
                         if(InstrumentHelper.compiledSdkVersion>22) {
                             ExpressionStmt exp = new ExpressionStmt( TrepnLibrary.getReadPermissions());
                             ExpressionStmt exp1 = new ExpressionStmt(TrepnLibrary.getWritePermissions());
@@ -972,9 +974,9 @@ public class InstrumentHelper {
                     cu.getImports().add(imp3);
             }
         }else if(x.getExtends() != null){
-            System.out.println("METHOD VISITOR 1");
+
             if(isJunitTest){
-                System.out.println("METHOD VISITOR 2");
+
                 new MethodVisitor().visit(cu, cDef);
                 if(cDef.hasTests()){
                     return "";
@@ -1132,6 +1134,9 @@ public class InstrumentHelper {
             else  if (this.type == JInst.InstrumentationType.ACTIVITY){
                 kt = new  KotlinInstrumenter( JInst.InstrumentationType.ACTIVITY, JavaParser.parseExpression("null")  );
             }
+            else  if (this.type == JInst.InstrumentationType.ANNOTATION){
+                kt = new  KotlinInstrumenter( JInst.InstrumentationType.ANNOTATION, JavaParser.parseExpression("null")  );
+            }
             else {
                 System.out.println("bad instrumentation type (transformKotlin) ");
             }
@@ -1150,7 +1155,11 @@ public class InstrumentHelper {
             }
             else if (this.isWhiteBox() && type != JInst.InstrumentationType.ACTIVITY ) {
                 return KastreeWriterFixed.Companion.write(kt.instrument(f), null);
-            }  else {
+            }
+            else if (this.isWhiteBox() && type != JInst.InstrumentationType.ANNOTATION ) {
+                return KastreeWriterFixed.Companion.write(kt.instrument(f), null);
+            }
+            else {
                 return KastreeWriterFixed.Companion.write(f, null);
             }
         }

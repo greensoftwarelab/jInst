@@ -1,4 +1,4 @@
-package jInst.profiler;
+package jInst.Instrumentation.profiler;
 
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.expr.Expression;

@@ -1,4 +1,4 @@
-package jInst.profiler;
+package jInst.Instrumentation.profiler;
 
 /**
  * Created by rrua on 17/06/17.
