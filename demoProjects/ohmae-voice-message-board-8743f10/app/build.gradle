@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.google.firebase.firebase-crash'
+
+def applicationName = "VoiceMessageBoard"
+def versionMajor = 1
+def versionMinor = 2
+def versionPatch = 2
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+    defaultConfig {
+        applicationId "net.mm2d.android.vmb"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        resConfigs "en", "ja"
+        vectorDrawables.useSupportLibrary = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "d"
+            manifestPlaceholders = [app_name: "Dubug"]
+        }
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [app_name: "@string/app_name"]
+        }
+    }
+    applicationVariants.all { variant ->
+        if (variant.buildType.name != "release") {
+            return
+        }
+        variant.outputs.all {
+            outputFileName = "${applicationName}-${versionName}.apk"
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:support-v4:26.1.0'
+    compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.google.firebase:firebase-crash:11.4.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    testCompile 'junit:junit:4.12'
+}
+
+setProperty("FirebaseServiceAccountFilePath",
+        rootProject.rootDir.parentFile.absolutePath + "/firebase-crashreporting-vmd.json")
+
+apply plugin: 'com.google.gms.google-services'
