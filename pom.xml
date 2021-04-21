@@ -150,11 +150,11 @@
             <version>2.5.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jaxen/jaxen -->
-        <dependency>
+        <!--dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
-            <version>1.1-beta-6-atlassian-1</version>
-        </dependency>
+            <version>1.2.0-atlassian-2</version>
+        </dependency-->
         <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
         <dependency>
             <groupId>xerces</groupId>
@@ -219,11 +219,11 @@
             <artifactId>jaxp-ri</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
             <version>4.1</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler-embeddable</artifactId>

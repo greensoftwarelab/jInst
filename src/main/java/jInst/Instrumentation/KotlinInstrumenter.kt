@@ -542,25 +542,25 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                         }
                         else if( ! KastreeWriterFixed.write(z.first()).equals(KastreeWriterFixed.write(insExpr))){
 
-                            val xx = x.copy(x.anns,x.typeParams,x.receiverType,x.name,x.paramTypeParams,x.params,x.type,x.typeConstraints, Node.Decl.Func.Body.Block( Node.Block( insertInBegin(z, Node.Stmt.Expr(insExpr), "Trepn")) ))
+                            val xx = x.copy(x.mods,x.typeParams,x.receiverType,x.name,x.paramTypeParams,x.params,x.type,x.typeConstraints, Node.Decl.Func.Body.Block( Node.Block( insertInBegin(z, Node.Stmt.Expr(insExpr), "Trepn")) ))
                             map.add(xx.hashCode())
                             scope1 = scope
                             xx
                         }
                         else{
-                            println("INSTRUMENT BEGIN KOTLIN 3.4")
+
                             scope1 = scope
                             v
                         }
                     }
                     else{
-                        println("INSTRUMENT BEGIN KOTLIN 3.5")
+
                         scope1 = scope
                         v
                     }
                 }
                 v is Node.Decl.Constructor  && ( ! map.contains(v.hashCode()) ) -> {
-                    println("INSTRUMENT BEGIN KOTLIN 4")
+
                     val args = ProjectMethods.wrapArgs(v.params)
                     scope1 += "-><init>"+ "|" + ProjectMethods.hashArgs(args)
                     allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods),args,scope1 , "kotlin" ) )
@@ -579,7 +579,7 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     }
                 }
                 v  is Node.Decl.Init  && ( ! map.contains(v.hashCode()) ) -> {
-                    println("INSTRUMENT BEGIN KOTLIN 5")
+
                     scope1+="-><init>"
                     allMethods.addMethod( ProjectMethods.buildJSONObj(listOf(),ProjectMethods.wrapArgs(listOf()),scope1 , "kotlin" ) )
                     val insExpr = getAppropriateMethodCall(scope1, true)
@@ -971,7 +971,7 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     t
                 }
                 v is Node.Decl.Constructor  && ( ! map.contains(v.hashCode()) ) -> {
-                    println("INSTRUMENT BEGIN KOTLIN 4")
+
                     val args = ProjectMethods.wrapArgs(v.params)
                     scope1 += "-><init>"+ "|" + ProjectMethods.hashArgs(args)
                     allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods),args,scope1 , "kotlin" ) )
