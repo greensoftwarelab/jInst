@@ -12,7 +12,8 @@ public class HunterAnnotationInstrumenter implements AnnotationInstrumenter {
 
 
     private static String hunterAnnotationName = "HunterDebug";
-    private static String hunterLibrary = "com.hunter.library.debug" + "." + hunterAnnotationName;
+    private static String libraryName = "com.hunter.library.debug";
+    private static String hunterLibrary = libraryName + "." + hunterAnnotationName;
 
     @Override
     public List<AnnotationExpr> getAnnotations() {
@@ -22,5 +23,10 @@ public class HunterAnnotationInstrumenter implements AnnotationInstrumenter {
     @Override
     public List<ImportDeclaration> getImports() {
         return Arrays.asList( new ImportDeclaration(new NameExpr(hunterLibrary),false,false));
+    }
+
+    @Override
+    public String getLibraryName() {
+        return libraryName;
     }
 }

@@ -6,8 +6,7 @@ import java.util.LinkedList;
 
 public class TrepnLibrary {
 
-
-   // public static String fulllibrary = "com.greenlab.trepnlib.TrepnLib";
+    public static String libraryName = "com.greenlab.trepnlib";
    // public static String library = "TrepnLib";
 
     public static String  fulllibrary = "uminho.di.greenlab.trepnlibrary.TrepnLib";

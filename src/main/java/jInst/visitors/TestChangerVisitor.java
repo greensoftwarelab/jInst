@@ -44,8 +44,18 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
         List<Statement> x = n.getBlock().getStmts() != null ? n.getBlock().getStmts() : new LinkedList<Statement>();
         String metodo = ((ClassDefs) arg).getPack() + "." + ((ClassDefs) arg).getName()+"<" +n.getName() + ">";
         MethodCallExpr m = null;
-        MethodCallExpr mce =  (((Profiler) InstrumentHelper.getInstrumenter())).marKTest(m,metodo);
-        x.add( new ExpressionStmt(mce));
+        if(InstrumentHelper.getInstrumenter() instanceof AnnotationInstrumenter){
+            AnnotationInstrumenter ai = (AnnotationInstrumenter) InstrumentHelper.getInstrumenter();
+            List<AnnotationExpr> newAnnotations = new ArrayList<>();
+            newAnnotations.addAll(n.getAnnotations());
+            newAnnotations.addAll(ai.getAnnotations());
+            n.setAnnotations(newAnnotations);
+            return;
+        }
+        else {
+            MethodCallExpr mce =  (((Profiler) InstrumentHelper.getInstrumenter())).marKTest(m,metodo);
+            x.add( new ExpressionStmt(mce));
+        }
         n.getBlock().setStmts(x);
 
     }
@@ -314,10 +324,12 @@ public class TestChangerVisitor extends VoidVisitorAdapter{
                         newAnnotations.addAll(ai.getAnnotations());
                         n.setAnnotations(newAnnotations);
                     }
-                    String metodo = InstrumentHelper.wrapMethod(n,cDef,"");
-                    MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null,metodo);
-                    x.add(0, new ExpressionStmt(mce));
-                    n.getBody().setStmts(x);
+                    else {
+                        String metodo = InstrumentHelper.wrapMethod(n, cDef, "");
+                        MethodCallExpr mce = ((TestOrientedProfiler) InstrumentHelper.getInstrumenter()).markTest(null, metodo);
+                        x.add(0, new ExpressionStmt(mce));
+                        n.getBody().setStmts(x);
+                    }
                 }
             }
         }

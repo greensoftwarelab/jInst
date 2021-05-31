@@ -128,5 +128,10 @@ public class TrepnMethodOrientedProfiler extends TrepnLibrary implements MethodO
         return l;
     }
 
+    @Override
+    public String getLibraryName() {
+        return libraryName;
+    }
+
 
 }

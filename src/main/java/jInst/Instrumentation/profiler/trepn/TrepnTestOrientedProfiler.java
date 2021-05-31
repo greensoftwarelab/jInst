@@ -108,4 +108,9 @@ public class TrepnTestOrientedProfiler extends TrepnLibrary implements TestOrien
         // l.add(importHunter);
        return l;
     }
+
+    @Override
+    public String getLibraryName() {
+        return libraryName;
+    }
 }

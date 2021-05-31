@@ -145,7 +145,9 @@ public class JInst {
                     }
                 }
                 break;
-            default : break;
+            default :
+                System.out.println("Unknown argument");
+                break;
                 //
         }
    }

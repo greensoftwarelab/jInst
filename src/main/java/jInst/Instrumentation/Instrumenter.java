@@ -7,5 +7,6 @@ import java.util.List;
 public interface Instrumenter {
 
     List<ImportDeclaration> getImports();
+    String getLibraryName();
 
 }

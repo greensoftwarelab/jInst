@@ -387,15 +387,18 @@ public class XMLParser {
             if (n.getNodeName().equals("uses-sdk")){
                 has_uses_sdk=true;
                 //tools:overrideLibrary="uminho.di.greenlab.trepnlibrary"
+
                 Node attr = doc.createAttribute( "tools:overrideLibrary");
-                attr.setNodeValue("uminho.di.greenlab.trepnlibrary");
+                String s = InstrumentHelper.getInstrumenter().getLibraryName();
+                attr.setNodeValue(s);
                 n.getAttributes().setNamedItem(attr);
             }
         }
             if (! has_uses_sdk ){
                 Node uses_sdk = doc.createElement("uses-sdk");
                 Node attr = doc.createAttribute( "tools:overrideLibrary");
-                attr.setNodeValue("uminho.di.greenlab.trepnlibrary");
+                String s = InstrumentHelper.getInstrumenter().getLibraryName();
+                attr.setNodeValue(s);
                 uses_sdk.getAttributes().setNamedItem(attr);
                 manifest.appendChild(uses_sdk);
             }

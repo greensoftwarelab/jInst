@@ -68,6 +68,11 @@ public class AMPInstrumenter implements ActivityInstrumenter {
     }
 
     @Override
+    public String getLibraryName() {
+        return library1;
+    }
+
+    @Override
     public List<String> getManifestEntries() {
        return new ArrayList<>(); // TODO
     }
