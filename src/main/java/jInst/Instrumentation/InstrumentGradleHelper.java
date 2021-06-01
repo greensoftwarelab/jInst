@@ -76,6 +76,7 @@ public class InstrumentGradleHelper extends InstrumentHelper{
 
         this.changeRunner();
       //  this.findLauncher();
+        XMLParser.addLibOverrideToManifests(this.findAllManifests());
     }
 
 
@@ -89,7 +90,6 @@ public class InstrumentGradleHelper extends InstrumentHelper{
         if(!manifest.equals("") && ax.exists()){
             XMLParser.editManifest(manifest);
             //XMLParser.insertReadWriteExternalPermissions(manifest);
-
         }
         if (type== JInst.InstrumentationType.ACTIVITY && isWhiteBox()){
             XMLParser.insertReadWriteExternalPermissionsAndDebbugable(manifest);

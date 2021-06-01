@@ -22,7 +22,11 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.VoidType;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import jInst.Instrumentation.Utils.KtlTestsInstrumenterUtil;
 import jInst.Instrumentation.Utils.ProjectMethods;
@@ -86,7 +90,14 @@ public class InstrumentHelper {
 
 
 
-
+    public List<String> findAllManifests(){
+        try {
+            return Files.find(Paths.get(this.transFolder), 6, (p, bfa) -> bfa.isRegularFile() && p.getFileName().toString().equals("AndroidManifest.xml") ).map(x-> x.toAbsolutePath().toString()).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 
     public InstrumentHelper(APICallUtil apu , String tName, String work, String proj, String tests, JInst.InstrumentationType type, String approach) {
         this.acu =apu;
@@ -304,15 +315,9 @@ public class InstrumentHelper {
     public void generateTransformedProject() throws Exception{
         File fProject = new File(project);
         File fTransf = new File(transFolder);
-
-
-
         fTransf.mkdir();
         File[] listOfFiles = fProject.listFiles();
-
-
-
-        //Copy all the files to the new project folder
+         //Copy all the files to the new project folder
         for(File f : listOfFiles){
             if(f.isDirectory()){
                 if(!f.getName().equals("src") && !f.getName().equals(tName) && !tests.contains(f.getAbsolutePath())){
@@ -348,8 +353,7 @@ public class InstrumentHelper {
         greenDroid.createNewFile();
         FileUtils.copyFile(new File("libsAdded/greendroid.jar"), greenDroid);
         */
-
-
+        XMLParser.addLibOverrideToManifests(this.findAllManifests());
     }
 
     protected void findLauncher(){

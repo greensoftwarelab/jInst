@@ -485,7 +485,70 @@ public class XMLParser {
 		sae.printStackTrace();
 	   }
     }
-    
+
+    public static void addLibOverrideToManifests(Iterable<String> files){
+        for(String file: files){
+            try {
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+                Document doc = docBuilder.parse(file);
+                // Get the root element
+                Node manifest = doc.getElementsByTagName("manifest").item(0);
+
+                // add xmlns:tools attribute if neeeded
+                boolean has_xmlns_tools = false;
+                for (int i = 0; i < manifest.getAttributes().getLength() ; i++) {
+                    Node n =  manifest.getAttributes().item(i);
+                    if (n instanceof DeferredAttrImpl && n.getNodeName().equals("xmlns:tools")){
+                        has_xmlns_tools = true;
+                    }
+                }
+                if (! has_xmlns_tools ){
+                    Node attr = doc.createAttribute( "xmlns:tools");
+                    attr.setNodeValue("http://schemas.android.com/tools");
+                    manifest.getAttributes().setNamedItem(attr);
+                }
+                // add override to TrepnLib
+                boolean has_uses_sdk = false;
+                for (int i = 0; i < manifest.getChildNodes().getLength() ; i++) {
+                    Node n =  manifest.getChildNodes().item(i);
+                    if (n.getNodeName().equals("uses-sdk")){
+                        has_uses_sdk=true;
+                        Node attr = doc.createAttribute( "tools:overrideLibrary");
+                        String s = InstrumentHelper.getInstrumenter().getLibraryName();
+                        attr.setNodeValue(s);
+                        n.getAttributes().setNamedItem(attr);
+                    }
+                }
+                if (! has_uses_sdk ){
+                    Node uses_sdk = doc.createElement("uses-sdk");
+                    Node attr = doc.createAttribute( "tools:overrideLibrary");
+                    String s = InstrumentHelper.getInstrumenter().getLibraryName();
+                    attr.setNodeValue(s);
+                    uses_sdk.getAttributes().setNamedItem(attr);
+                    manifest.appendChild(uses_sdk);
+                }
+                // write the content into xml file
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                StreamResult result = new StreamResult(new File(file));
+                transformer.transform(source, result);
+
+            } catch (ParserConfigurationException pce) {
+                pce.printStackTrace();
+            } catch (TransformerException tfe) {
+                tfe.printStackTrace();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            } catch (SAXException sae) {
+                sae.printStackTrace();
+            }
+        }
+    }
+
+
+
     public static void editProjectDesc(String file){
          try {
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
