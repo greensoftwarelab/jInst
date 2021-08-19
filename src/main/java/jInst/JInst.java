@@ -87,7 +87,7 @@ public class JInst {
         switch (projType){
             case "-sdk":
                 if(args.length != 9){
-                    System.err.println("[jInst] Error: Bad arguments length for SDK project. Expected 6, got "+args.length+".");
+                    System.err.println("[jInst] Error: Bad arguments length for SDK project. Expected 9, got "+args.length+".");
                     return;
                 }else{
                     String approach = args[8];
@@ -116,7 +116,7 @@ public class JInst {
                 break;
             case "-gradle":
                 if(args.length != 10){
-                    System.err.println("[jInst] Error: Bad arguments length for Gradle project. Expected 8, got "+args.length+".");
+                    System.err.println("[jInst] Error: Bad arguments length for Gradle project. Expected 10, got "+args.length+".");
                     return;
                 }else{
                     String approach = args[9];

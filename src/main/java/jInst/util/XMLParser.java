@@ -18,7 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.sun.org.apache.xerces.internal.dom.DeferredAttrImpl;
+//import com.sun.org.apache.xerces.internal.dom.DeferredAttrImpl;
 import jInst.Instrumentation.InstrumentHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -153,9 +153,6 @@ public class XMLParser {
         }
         return l;
     }
-    
-
-
 
     public static void parseManifest(String file) {
         buildPackage = "";
@@ -371,7 +368,8 @@ public class XMLParser {
 		boolean has_xmlns_tools = false;
         for (int i = 0; i < manifest.getAttributes().getLength() ; i++) {
            Node n =  manifest.getAttributes().item(i);
-           if (n instanceof DeferredAttrImpl && n.getNodeName().equals("xmlns:tools")){
+           //if (n instanceof DeferredAttrImpl && n.getNodeName().equals("xmlns:tools")){
+            if (n.getNodeName().equals("xmlns:tools")){
                has_xmlns_tools = true;
            }
         }
@@ -499,7 +497,8 @@ public class XMLParser {
                 boolean has_xmlns_tools = false;
                 for (int i = 0; i < manifest.getAttributes().getLength() ; i++) {
                     Node n =  manifest.getAttributes().item(i);
-                    if (n instanceof DeferredAttrImpl && n.getNodeName().equals("xmlns:tools")){
+                    //if (n instanceof DeferredAttrImpl && n.getNodeName().equals("xmlns:tools")){
+                    if (n.getNodeName().equals("xmlns:tools")){
                         has_xmlns_tools = true;
                     }
                 }

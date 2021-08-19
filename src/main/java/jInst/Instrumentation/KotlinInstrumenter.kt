@@ -934,6 +934,18 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
         return ""
     }
 
+    fun mergeAnnotations(anns : List<Node.Modifier>, anns2 : List<Node.Modifier> ): List<Node.Modifier> {
+        val aux = mutableListOf<Node.Modifier>()
+        aux.addAll(anns)
+        for (ann in anns2){
+            var alreadyinlist = aux.any{ it == ann }
+            if ( ! alreadyinlist){
+                aux.add(ann)
+            }
+        }
+        return aux
+    }
+
     fun instrumentAnnotation(node: Node, scope : String, map : MutableSet<Int> ): Node {
         var scope1 : String =  scope
         return MMutableVisitor.preVisit(node) { v, p ->
@@ -942,7 +954,7 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     //scope1 += extractString(v.lhs)
                     map.add(v.rhs.hashCode())
                     //val insExpr = getAppropriateMethodCall(scope1, true)
-                    val x = v.copy(v.lhs, v.oper, instrumentBegin(v.rhs,scope1, map ) as Node.Expr)
+                    val x = v.copy(v.lhs, v.oper, instrumentAnnotation(v.rhs,scope1, map ) as Node.Expr)
                     map.add(v.rhs.hashCode())
                     scope1 = scope
                     x
@@ -964,8 +976,9 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     jo.put("args", JSONArray())
                     allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods), args,scope1, "kotlin" ) )
                     val anns = mutableListOf<Node.Modifier>( HunterAnnotationInstrumenterAdapter(getInstrumenter() as HunterAnnotationInstrumenter).getAnnotations())
-                    anns.addAll(v.mods)
-                    val t = v.copy(anns,v.typeParams,v.receiverType,v.name,v.paramTypeParams,v.params,v.type,v.typeConstraints,v.body)
+                    val new_anns = mergeAnnotations(anns,v.mods)
+                    // mods: kotlin.collections.List<kastree.ast.Node.Modifier>, typeParams: kotlin.collections.List<kastree.ast.Node.TypeParam>, receiverType: kastree.ast.Node.Type?, name: kotlin.String?, paramTypeParams: kotlin.collections.List<kastree.ast.Node.TypeParam>, params: kotlin.collections.List<kastree.ast.Node.Decl.Func.Param>, type: kastree.ast.Node.Type?, typeConstraints: kotlin.collections.List<kastree.ast.Node.TypeConstraint>, body: kastree.ast.Node.Decl.Func.Body
+                    val t = v.copy(new_anns,v.typeParams,v.receiverType,v.name,v.paramTypeParams,v.params,v.type,v.typeConstraints,v.body)
                     map.add(t.hashCode())
                     scope1 = scope
                     t
@@ -976,8 +989,8 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
                     scope1 += "-><init>"+ "|" + ProjectMethods.hashArgs(args)
                     allMethods.addMethod( ProjectMethods.buildJSONObj(ProjectMethods.wrapMods(v.mods),args,scope1 , "kotlin" ) )
                     val anns = mutableListOf<Node.Modifier>( HunterAnnotationInstrumenterAdapter(getInstrumenter() as HunterAnnotationInstrumenter).getAnnotations())
-                    anns.addAll(v.mods)
-                    val t = v.copy(anns,v.params,v.delegationCall,v.block)
+                    val new_anns = mergeAnnotations( anns, v.mods)
+                    val t = v.copy(new_anns,v.params,v.delegationCall,v.block)
                     map.add(t.hashCode())
                     scope1 = scope
                     t
