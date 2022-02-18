@@ -194,13 +194,12 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
         return MMutableVisitor.preVisit(node) { v,_ ->
             when {
                 v is Node.Decl.Func.Body.Block -> {
-                    v.copy( Node.Block( insertInBegin(v.block.stmts, Node.Stmt.Expr (getMarkTestCall(funcId)) , "Trepn")))
+                    v.copy( Node.Block( insertInBegin(v.block.stmts, getMarkTestCall(funcId)?.let { Node.Stmt.Expr (it) }, "Trepn")))
                 }
                 else -> v
             }
         }
     }
-
 
     fun createOnCreateFunction(): Node.Decl.Func {
         // create on create func
@@ -437,7 +436,7 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
     }
 
 
-    fun getMarkTestCall(call:String) : Node.Expr {
+    fun getMarkTestCall(call:String) : Node.Expr? {
        return if (instrumentationType == JInst.InstrumentationType.METHOD) {
            TrepnMethodOrientedProfilerAdapter(instrumenter as TrepnMethodOrientedProfiler).marKTest(ctx,call)
         }
@@ -445,7 +444,7 @@ class KotlinInstrumenter(val instrumentationType : JInst.InstrumentationType, va
            TrepnTestOrientedProfilerAdapter(instrumenter as TrepnTestOrientedProfiler).marKTest(ctx,call)
        }
         else{
-           TrepnTestOrientedProfilerAdapter(instrumenter as TrepnTestOrientedProfiler).marKTest(ctx,call)
+           null
        }
     }
 

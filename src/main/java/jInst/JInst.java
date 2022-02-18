@@ -143,6 +143,7 @@ public class JInst {
                         XMLParser.buildAppPermissionsJSON( helper.getOriginalManifest(),helper.getTransFolder());
                     } catch (Exception ex) {
                         Logger.getLogger(JInst.class.getName()).log(Level.SEVERE, null, ex);
+                        System.exit(1);
                     }
                 }
                 break;

@@ -11,7 +11,9 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,17 +79,12 @@ public class FileUtils {
     }
     
     public static void copyFile(File source, File dest) throws IOException {
-        FileChannel sourceChannel = null;
-        FileChannel destChannel = null;
-        try {
-            sourceChannel = new FileInputStream(source).getChannel();
-            destChannel = new FileOutputStream(dest).getChannel();
-            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-            
-        }finally{
-            sourceChannel.close();
-            destChannel.close();
-       }
+        Path copied = dest.toPath();
+        Path originalPath = source.toPath();
+        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+        if (!copied.toFile().exists()){
+            throw new IOException("Unable to create file " + copied.toAbsolutePath());
+        }
     }
     
     public static void writeFile(File file, String content) throws IOException{

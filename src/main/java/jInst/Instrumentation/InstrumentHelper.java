@@ -328,7 +328,7 @@ public class InstrumentHelper {
                 }
             }else if(f.isFile()){
                 File aux = new File(transFolder+f.getName());
-                aux.createNewFile();
+                //aux.createNewFile();
                 FileUtils.copyFile(f, aux);
             }
         }

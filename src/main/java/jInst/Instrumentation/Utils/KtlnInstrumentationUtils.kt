@@ -228,13 +228,15 @@ fun isElvis(node: Node): Boolean {
 }
 
 
-fun insertInBegin( node: List<Node.Stmt>, stm : Node.Stmt , stmPrefix: String): List<Node.Stmt> {
+fun insertInBegin( node: List<Node.Stmt>, stm : Node.Stmt? , stmPrefix: String): List<Node.Stmt> {
     return if (  ! node.isEmpty() &&  KastreeWriterFixed.write(node.first()).startsWith( stmPrefix )){
         node
     }
+    else if(stm != null){
+        ( listOf( stm ) + node)
+    }
     else{
-        (  listOf( stm ) + node)
-        // v.copy(v.stmts + listOf(expr))
+       node
     }
 }
 
