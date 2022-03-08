@@ -1054,13 +1054,6 @@ public class InstrumentHelper {
                     ||  s.matches(".* class .+ extends (TestCase|ActivityUnitTestCase|ActivityInstrumentationTestCase2|ActivityTestCase|ProviderTestCase|SingleLaunchActivityTestCase|SyncBaseInstrumentation|ActivityInstrumentationTestCase|ActivityInstrumentationTestCase2|AndroidTestCase|ApplicationTestCase|LoaderTestCase|ProviderTestCase2|ServiceTestCasefail).*")
                         ||  s.matches(".*(TestCase|ActivityUnitTestCase|ActivityInstrumentationTestCase2|ActivityTestCase|ProviderTestCase|SingleLaunchActivityTestCase|SyncBaseInstrumentation|ActivityInstrumentationTestCase|ActivityInstrumentationTestCase2|AndroidTestCase|ApplicationTestCase|LoaderTestCase|ProviderTestCase2|ServiceTestCasefail).*")
             ){
-                try{
-                    FileInputStream in = new FileInputStream(src);
-                    CompilationUnit cu = JavaParser.parse(in,null, false);
-                    //boolean contains_junitImport = cu.getImports().stream().anyMatch( x -> x.toStringWithoutComments().contains("junit"));
-
-                }catch (Exception e){
-                }
                 addTestType(src.getAbsolutePath(),"Other");
                 res=true;
             }
